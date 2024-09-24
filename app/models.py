@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, create_engine
+from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -28,7 +28,7 @@ class Concert(Base):
     __tablename__ = "concerts"
 
     id = Column(Integer(), primary_key=True)
-    date = Column(Date())
+    date = Column(String())
     band_id = Column(Integer(), ForeignKey("bands.id"))
     venue_id = Column(Integer(), ForeignKey("venues.id"))
 
