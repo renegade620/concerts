@@ -15,6 +15,14 @@ class Band(Base):
 
     concerts = relationship("Concert", backref="band")
 
+    def get_concerts(self):
+        """return a collection of all the concerts that the Band has played"""
+        return self.concerts
+    
+    def venues(self, session):
+        """return a collection of all the venues the band has performed at"""
+        return session.query(Venue).join(Concert).filter(Concert.band == self).distinct().all()
+
 class Venue(Base):
     __tablename__ = "venues"
 
@@ -24,6 +32,15 @@ class Venue(Base):
 
     concerts = relationship("Concert", backref="venue")
 
+    def get_concerts(self): 
+        """return a collection of concerts for that venue"""
+        return self.concerts
+    
+    def bands(self, session):
+        """returns a collection of all the bands who performed at the Venue"""
+        return session.query(Band).join(Concert).filter(Concert.venue == self).distinct().all()
+
+
 class Concert(Base):
     __tablename__ = "concerts"
 
@@ -31,5 +48,16 @@ class Concert(Base):
     date = Column(String())
     band_id = Column(Integer(), ForeignKey("bands.id"))
     venue_id = Column(Integer(), ForeignKey("venues.id"))
+
+    # Object Relationship Methods
+    def band(self):
+        """returns Band instance for this concert"""
+        return self.band
+    
+    def venue(self):
+        """returns Venue instance for this concert"""
+        return self.venue
+
+    # Aggregate and Relationship Methods
 
 Base.metadata.create_all(engine)
